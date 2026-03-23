@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MyShop - Home</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>MyShop</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="products.html">Products</a>
+      <a href="contact.html">Contact</a>
+      <a href="cart.html">Cart</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h2>Welcome to MyShop</h2>
+    <p>Best Products at Best Prices</p>
+  </section>
+
+  <section class="products">
+    <div class="product">
+      <h3>Product 1</h3>
+      <p>₹500</p>
+      <button onclick="addToCart('Product 1', 500)">Add to Cart</button>
+    </div>
+    <div class="product">
+      <h3>Product 2</h3>
+      <p>₹800</p>
+      <button onclick="addToCart('Product 2', 800)">Add to Cart</button>
+    </div>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>
