@@ -1,0 +1,39 @@
+body {
+  font-family: Arial;
+  margin: 0;
+  background: #f4f4f4;
+}
+header {
+  background: #333;
+  color: #fff;
+  padding: 10px;
+  text-align: center;
+}
+nav a {
+  color: white;
+  margin: 10px;
+  text-decoration: none;
+}
+.products {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+}
+.product {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+}
+button {
+  padding: 10px;
+  background: green;
+  color: white;
+  border: none;
+}
+.contact, .checkout {
+  padding: 20px;
+}
+input, textarea {
+  width: 300px;
+  padding: 10px;
+}
