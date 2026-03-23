@@ -6,35 +6,60 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>Checkout</h1>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="products.html">Products</a>
-      <a href="contact.html">Contact</a>
-      <a href="cart.html">Cart</a>
-      <a href="checkout.html">Checkout</a>
-    </nav>
-  </header>
 
-  <section class="checkout">
+<header>
+  <h1>Checkout Page</h1>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="products.html">Products</a>
+    <a href="contact.html">Contact</a>
+    <a href="cart.html">Cart</a>
+  </nav>
+</header>
 
-    <h2>Your Order</h2>
-    <div id="checkout-items"></div>
-    <h3 id="checkout-total"></h3>
+<section style="padding:20px;">
+  <h2>Your Order</h2>
+  <div id="items"></div>
+  <h3 id="total"></h3>
 
-    <h2>Billing Details</h2>
-    <form onsubmit="placeOrder(event)">
-      <input type="text" placeholder="Full Name" required><br><br>
-      <input type="text" placeholder="Address" required><br><br>
-      <input type="text" placeholder="City" required><br><br>
-      <input type="text" placeholder="Pincode" required><br><br>
-      <input type="text" placeholder="Card Number" required><br><br>
-      <button type="submit">Place Order</button>
-    </form>
+  <h2>Billing Details</h2>
+  <form onsubmit="placeOrder(event)">
+    <input type="text" placeholder="Full Name" required><br><br>
+    <input type="text" placeholder="Address" required><br><br>
+    <input type="text" placeholder="City" required><br><br>
+    <input type="text" placeholder="Pincode" required><br><br>
+    <button type="submit">Place Order</button>
+  </form>
+</section>
 
-  </section>
+<script>
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-  <script src="script.js"></script>
+function loadCheckout() {
+  let itemsDiv = document.getElementById("items");
+  let total = 0;
+
+  itemsDiv.innerHTML = "";
+
+  cart.forEach(item => {
+    let p = document.createElement("p");
+    p.innerText = item.name + " - ₹" + item.price;
+    itemsDiv.appendChild(p);
+    total += item.price;
+  });
+
+  document.getElementById("total").innerText = "Total: ₹" + total;
+}
+
+function placeOrder(e) {
+  e.preventDefault();
+  alert("Order Placed Successfully!");
+  localStorage.removeItem("cart");
+  window.location.href = "index.html";
+}
+
+loadCheckout();
+</script>
+
 </body>
 </html>
