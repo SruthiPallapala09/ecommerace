@@ -1,63 +1,87 @@
-document.addEventListener("DOMContentLoaded",()=>{
-
-const products=[
-{id:1,name:"Sony Headphones",price:3000,cat:"premium",img:"https://picsum.photos/200?1"},
-{id:2,name:"Boat Headphones",price:1500,cat:"budget",img:"https://picsum.photos/200?2"},
-{id:3,name:"JBL Earbuds",price:2000,cat:"budget",img:"https://picsum.photos/200?3"},
-{id:4,name:"Noise Cancelling Pro",price:5000,cat:"premium",img:"https://picsum.photos/200?4"}
+const products = [
+  {id:1,name:"Headphones",price:2000,category:"electronics",img:"https://picsum.photos/200?1"},
+  {id:2,name:"Smart Watch",price:5000,category:"electronics",img:"https://picsum.photos/200?2"},
+  {id:3,name:"Shoes",price:3000,category:"fashion",img:"https://picsum.photos/200?3"},
+  {id:4,name:"Jacket",price:4000,category:"fashion",img:"https://picsum.photos/200?4"},
+  {id:5,name:"Phone",price:15000,category:"electronics",img:"https://picsum.photos/200?5"},
+  {id:6,name:"Bag",price:2500,category:"fashion",img:"https://picsum.photos/200?6"}
 ];
 
-let cart=JSON.parse(localStorage.getItem("cart"))||[];
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-window.addToCart=id=>{
-cart.push(products.find(p=>p.id===id));
-localStorage.setItem("cart",JSON.stringify(cart));
-updateCart();
+function displayProducts(list,containerId){
+  const container = document.getElementById(containerId);
+  if(!container) return;
+  container.innerHTML = "";
+  list.forEach(p=>{
+    container.innerHTML += `
+      <div class="product">
+        <img src="${p.img}">
+        <h3>${p.name}</h3>
+        <p>₹${p.price}</p>
+        <button onclick="addToCart(${p.id})">Add to Cart</button>
+      </div>`;
+  });
 }
 
-window.filterProducts=type=>{
-if(type==='all') display(products);
-else display(products.filter(p=>p.cat===type));
+function addToCart(id){
+  const product = products.find(p=>p.id===id);
+  cart.push(product);
+  localStorage.setItem("cart",JSON.stringify(cart));
+  updateCartCount();
 }
 
-function display(list){
-let el=document.getElementById("product-list")||document.getElementById("featured-products");
-if(!el) return;
-el.innerHTML=list.map(p=>`
-<div class="card">
-<img src="${p.img}">
-<h3>${p.name}</h3>
-<p>₹${p.price}</p>
-<button onclick="addToCart(${p.id})" class="btn">Add</button>
-</div>`).join('');
-}
-
-function updateCart(){
-let c=document.getElementById("cart-count");
-if(c) c.innerText=cart.length;
+function updateCartCount(){
+  const el = document.getElementById("cart-count");
+  if(el) el.innerText = cart.length;
 }
 
 function displayCart(){
-let el=document.getElementById("cart-items"),t=0;
-if(!el) return;
-el.innerHTML=cart.map(i=>{t+=i.price;return <p>${i.name} - ₹${i.price}</p>}).join('');
-document.getElementById("total").innerText=t;
+  const container = document.getElementById("cart-items");
+  const totalEl = document.getElementById("total");
+  if(!container) return;
+
+  container.innerHTML = "";
+  let total = 0;
+
+  cart.forEach((item,index)=>{
+    total += item.price;
+    container.innerHTML += `
+      <div>
+        ${item.name} - ₹${item.price}
+        <button onclick="removeItem(${index})">Remove</button>
+      </div>`;
+  });
+
+  totalEl.innerText = total;
 }
 
-function checkout(){
-let f=document.getElementById("checkout-form");
-if(!f) return;
-f.addEventListener("submit",e=>{
-e.preventDefault();
-let id="ORD"+Date.now();
-document.getElementById("order-success").innerHTML=✅ Success! ID: ${id};
-localStorage.removeItem("cart");
-});
+function removeItem(index){
+  cart.splice(index,1);
+  localStorage.setItem("cart",JSON.stringify(cart));
+  displayCart();
+  updateCartCount();
 }
 
-updateCart();
-display(products);
-displayCart();
-checkout();
+if(document.getElementById("featured-products")){
+  displayProducts(products.slice(0,4),"featured-products");
+}
 
-});
+if(document.getElementById("product-list")){
+  displayProducts(products,"product-list");
+}
+
+if(document.getElementById("cart-items")){
+  displayCart();
+}
+
+updateCartCount();
+
+// Checkout
+const form = document.getElementById("checkout-form");
+if(form){
+  form.addEventListener("submit",function(e){
+    e.preventDefault();
+}
+
+
