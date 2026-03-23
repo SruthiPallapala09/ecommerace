@@ -1,51 +1,135 @@
-
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Checkout</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Checkout - MyShop</title>
+  <style>
+    body {
+      font-family: Arial;
+      margin: 0;
+      background: #f5f5f5;
+    }
+
+```
+header {
+  background: #222;
+  color: white;
+  text-align: center;
+  padding: 15px;
+}
+
+nav a {
+  color: white;
+  margin: 10px;
+  text-decoration: none;
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.order, .form-box {
+  background: white;
+  padding: 20px;
+  width: 45%;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h2 {
+  margin-top: 0;
+}
+
+.item {
+  border-bottom: 1px solid #ddd;
+  padding: 10px 0;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+}
+
+button {
+  padding: 12px;
+  width: 100%;
+  background: green;
+  color: white;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: darkgreen;
+}
+```
+
+  </style>
 </head>
+
 <body>
 
 <header>
-  <h1>Checkout Page</h1>
+  <h1>Checkout</h1>
   <nav>
     <a href="index.html">Home</a>
     <a href="products.html">Products</a>
-    <a href="contact.html">Contact</a>
     <a href="cart.html">Cart</a>
   </nav>
 </header>
 
-<section style="padding:20px;">
-  <h2>Your Order</h2>
-  <div id="items"></div>
-  <h3 id="total"></h3>
+<div class="container">
 
-  <h2>Billing Details</h2>
-  <form onsubmit="placeOrder(event)">
-    <input type="text" placeholder="Full Name" required><br><br>
-    <input type="text" placeholder="Address" required><br><br>
-    <input type="text" placeholder="City" required><br><br>
-    <input type="text" placeholder="Pincode" required><br><br>
-    <button type="submit">Place Order</button>
-  </form>
-</section>
+  <!-- ORDER SUMMARY -->
+
+  <div class="order">
+    <h2>Your Order</h2>
+    <div id="order-items"></div>
+    <h3 id="total"></h3>
+  </div>
+
+  <!-- BILLING FORM -->
+
+  <div class="form-box">
+    <h2>Billing Details</h2>
+    <form onsubmit="placeOrder(event)">
+      <input type="text" placeholder="Full Name" required>
+      <input type="text" placeholder="Address" required>
+      <input type="text" placeholder="City" required>
+      <input type="text" placeholder="Pincode" required>
+      <input type="text" placeholder="Phone Number" required>
+
+```
+  <button type="submit">Place Order</button>
+</form>
+```
+
+  </div>
+
+</div>
 
 <script>
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-function loadCheckout() {
-  let itemsDiv = document.getElementById("items");
+function loadOrder() {
+  let container = document.getElementById("order-items");
   let total = 0;
 
-  itemsDiv.innerHTML = "";
+  if(cart.length === 0){
+    container.innerHTML = "<p>Your cart is empty</p>";
+    return;
+  }
 
   cart.forEach(item => {
-    let p = document.createElement("p");
-    p.innerText = item.name + " - ₹" + item.price;
-    itemsDiv.appendChild(p);
+    let div = document.createElement("div");
+    div.classList.add("item");
+    div.innerHTML = item.name + " - ₹" + item.price;
+    container.appendChild(div);
     total += item.price;
   });
 
@@ -54,13 +138,22 @@ function loadCheckout() {
 
 function placeOrder(e) {
   e.preventDefault();
-  alert("Order Placed Successfully!");
+
+  if(cart.length === 0){
+    alert("Cart is empty!");
+    return;
+  }
+
+  alert("✅ Order Placed Successfully!");
+
   localStorage.removeItem("cart");
+
   window.location.href = "index.html";
 }
 
-loadCheckout();
+loadOrder();
 </script>
 
 </body>
 </html>
+
