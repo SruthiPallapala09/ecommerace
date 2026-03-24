@@ -1,21 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
 <title>Checkout</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<h2>Checkout</h2>
-<form id="checkout-form">
-<input type="text" placeholder="Name" required>
-<input type="text" placeholder="Address" required>
-<input type="email" placeholder="Email" required>
-<input type="tel" placeholder="Phone" required>
-<button type="submit" class="btn">Place Order</button>
-</form>
-
+<h2 class="center">💳 Checkout</h2>
 <div id="order-summary"></div>
+<form id="checkout-form" class="checkout-form">
+<input type="text" id="name" placeholder="Full Name" required>
+<input type="text" id="address" placeholder="Address" required>
+<input type="email" id="email" placeholder="Email" required>
+<input type="tel" id="phone" placeholder="Phone" required>
+<button class="btn">Place Order</button>
+</form>
 <script src="script.js"></script>
 </body>
 </html>
