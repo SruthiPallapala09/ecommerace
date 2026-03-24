@@ -1,87 +1,76 @@
-const products = [
-  {id:1,name:"Headphones",price:2000,category:"electronics",img:"https://picsum.photos/200?1"},
-  {id:2,name:"Smart Watch",price:5000,category:"electronics",img:"https://picsum.photos/200?2"},
-  {id:3,name:"Shoes",price:3000,category:"fashion",img:"https://picsum.photos/200?3"},
-  {id:4,name:"Jacket",price:4000,category:"fashion",img:"https://picsum.photos/200?4"},
-  {id:5,name:"Phone",price:15000,category:"electronics",img:"https://picsum.photos/200?5"},
-  {id:6,name:"Bag",price:2500,category:"fashion",img:"https://picsum.photos/200?6"}
-];
-
-let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-function displayProducts(list,containerId){
-  const container = document.getElementById(containerId);
-  if(!container) return;
-  container.innerHTML = "";
-  list.forEach(p=>{
-    container.innerHTML += `
-      <div class="product">
-        <img src="${p.img}">
-        <h3>${p.name}</h3>
-        <p>₹${p.price}</p>
-        <button onclick="addToCart(${p.id})">Add to Cart</button>
-      </div>`;
-  });
+const products=[
+</div>`});
 }
 
 function addToCart(id){
-  const product = products.find(p=>p.id===id);
-  cart.push(product);
-  localStorage.setItem("cart",JSON.stringify(cart));
-  updateCartCount();
+const p=products.find(x=>x.id===id);
+const e=cart.find(x=>x.id===id);
+if(e)e.qty++;else cart.push({...p,qty:1});
+localStorage.setItem("cart",JSON.stringify(cart));
+updateCartCount();
 }
 
 function updateCartCount(){
-  const el = document.getElementById("cart-count");
-  if(el) el.innerText = cart.length;
+const el=document.getElementById("cart-count");
+if(el)el.innerText=cart.reduce((a,b)=>a+b.qty,0);
 }
 
 function displayCart(){
-  const container = document.getElementById("cart-items");
-  const totalEl = document.getElementById("total");
-  if(!container) return;
-
-  container.innerHTML = "";
-  let total = 0;
-
-  cart.forEach((item,index)=>{
-    total += item.price;
-    container.innerHTML += `
-      <div>
-        ${item.name} - ₹${item.price}
-        <button onclick="removeItem(${index})">Remove</button>
-      </div>`;
-  });
-
-  totalEl.innerText = total;
+const c=document.getElementById("cart-items");
+const t=document.getElementById("total");
+if(!c)return;
+c.innerHTML="";let total=0;
+cart.forEach((i,idx)=>{
+total+=i.price*i.qty;
+c.innerHTML+=`<div>${i.name} ₹${i.price} x ${i.qty}
+<button onclick='changeQty(${idx},1)'>+</button>
+<button onclick='changeQty(${idx},-1)'>-</button>
+<button onclick='removeItem(${idx})'>X</button></div>`});
+t.innerText=total;
 }
 
-function removeItem(index){
-  cart.splice(index,1);
-  localStorage.setItem("cart",JSON.stringify(cart));
-  displayCart();
-  updateCartCount();
-}
+function changeQty(i,v){cart[i].qty+=v;if(cart[i].qty<=0)cart.splice(i,1);localStorage.setItem("cart",JSON.stringify(cart));displayCart();updateCartCount();}
+function removeItem(i){cart.splice(i,1);localStorage.setItem("cart",JSON.stringify(cart));displayCart();updateCartCount();}
 
-if(document.getElementById("featured-products")){
-  displayProducts(products.slice(0,4),"featured-products");
-}
+// Filters
+const priceFilter=document.getElementById("priceFilter");
+if(priceFilter){
+priceFilter.onchange=()=>{
+let filtered=products;
+if(priceFilter.value==="low")filtered=products.filter(p=>p.price<10000);
+if(priceFilter.value==="high")filtered=products.filter(p=>p.price>10000);
+displayProducts(filtered);
+};}
 
-if(document.getElementById("product-list")){
-  displayProducts(products,"product-list");
-}
-
-if(document.getElementById("cart-items")){
-  displayCart();
-}
-
-updateCartCount();
+// Search
+const s=document.getElementById("searchBox");
+if(s){s.oninput=()=>{displayProducts(products.filter(p=>p.name.toLowerCase().includes(s.value.toLowerCase())));};}
 
 // Checkout
-const form = document.getElementById("checkout-form");
-if(form){
-  form.addEventListener("submit",function(e){
-    e.preventDefault();
+const f=document.getElementById("checkout-form");
+if(f){
+f.onsubmit=(e)=>{
+e.preventDefault();
+const id="ORD"+Math.floor(Math.random()*999999);
+localStorage.setItem("order",JSON.stringify({id,cart}));
+localStorage.removeItem("cart");
+window.location="order.html";
+};}
+
+// Order page
+const od=document.getElementById("order-details");
+if(od){
+const order=JSON.parse(localStorage.getItem("order"));
+if(order){
+od.innerHTML=`Order ID: ${order.id}<br>`+order.cart.map(i=>i.name+" x "+i.qty).join("<br>");
 }
+}
+
+window.onload=()=>{document.getElementById("loader").style.display="none";};
+
+if(document.getElementById("product-list")||document.getElementById("featured-products"))displayProducts();
+if(document.getElementById("cart-items"))displayCart();
+updateCartCount();
+
 
 
